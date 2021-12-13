@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<maxCompilerManager version="2">
+<enginePart internalEngineSubproject="tutorial-chap06-example3-vectors_EngineCode" isSrcBin="false" isUseDefaultSelected="false" outputLocation="/tutorial-chap06-example3-vectors_EngineCode/bin" projectName="tutorial-chap06-example3-vectors"/>
+<cpuPart internalCpuSubproject="tutorial-chap06-example3-vectors_CPUCode"/>
+<watchedFiles/>
+</maxCompilerManager>

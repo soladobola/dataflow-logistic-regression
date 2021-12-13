@@ -1,0 +1,59 @@
+/**
+ * Document: MaxCompiler Tutorial (maxcompiler-tutorial.pdf)
+ * Chapter: 6
+ * Example: 3
+ * Summary:
+ *        Kernel that doubles values in a vector.
+ */
+package vectors;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEVar;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.DFEVector;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.composite.DFEVectorType;
+
+
+
+class VectorsKernel extends Kernel {
+
+	VectorsKernel(KernelParameters parameters, int vectorSize) {
+		super(parameters);
+        
+		DFEVectorType<DFEVar> vectorType =
+			new DFEVectorType<DFEVar>(dfeFloat(8, 24), vectorSize);
+
+		// Get theta
+		DFEVector<DFEVar> theta = io.input("theta", vectorType);
+		
+		// Get example
+		DFEVector<DFEVar> example_x = io.input("example", vectorType);
+		
+		// Get label
+		DFEVar y = io.input("y", dfeFloat(8, 24));
+
+		
+	
+		// theta^t*x^(i)
+		DFEVar ttx = dfeFloat(8, 24).newInstance(this);
+		ttx = constant.var(dfeFloat(8, 24), 0);
+		for(int i = 0; i < vectorSize; i++){
+		    ttx += theta[i]*example_x[i];
+		}
+		
+		
+		// calculating g(theta^t*x(1)) - y
+	    DFEVar abs = ttx < 0 ? -ttx : ttx;
+	    DFEVar sigmoid = 0.5*ttx/(1 + abs) + 0.5 - y;
+	    
+	    
+	    DFEVector<DFEVar> partialResult = vectorType.newInstance(this);
+	    for(int i = 0; i < vectorSize; i++){
+	        partialResult[i] <== example_x[i]*sigmoid;
+	    }
+       
+		//Output
+		io.output("result", partialResult, vectorType);
+	}
+
+}
